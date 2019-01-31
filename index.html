@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>gdpr</title>
+    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="gdpr.css">
+</head>
+
+<body>
+
+    <div id="gdpr-banner" class="active" data-gdpr_duration="0">
+
+        Some text... <br>
+        <button id="gdpr-ok-btn">I agree</button>
+
+    </div>
+
+    <script type="text/javascript">
+        let _setCookie,
+            _gdpr_banner = document.getElementById('gdpr-banner'),
+            _gdpr_ok_btn = document.getElementById('gdpr-ok-btn'),
+            _gdpr_cookie_name = 'website_gdpr';
+
+        if (document.cookie.indexOf(_gdpr_cookie_name) > -1) {
+            _gdpr_banner.classList.remove('active');
+            _gdpr_banner.parentNode.removeChild(_gdpr_banner);
+        }
+
+        _setCookie = function (name, value) {
+            var expire_days = parseInt(_gdpr_banner.dataset.gdpr_duration),
+                expire = '';
+            if (expire_days) {
+                expire = new Date();
+                expire.setTime(expire.getTime() + (expire_days * 24 * 60 * 60 * 1000));
+                expire = 'expires= ' + expire.toGMTString() + ';';
+            }
+            document.cookie = name + "=" + value + "; " + expire + "path=/;";
+        };
+
+        _gdpr_ok_btn.addEventListener('click', function () {
+            _setCookie(_gdpr_cookie_name, 'yes');
+            _gdpr_banner.classList.remove('active');
+            _gdpr_banner.addEventListener('transitionend', function (event) {
+                _gdpr_banner.parentNode.removeChild(_gdpr_banner);
+            }, false);
+            return false;
+        });
+    </script>
+
+</body>
+
+</html>
